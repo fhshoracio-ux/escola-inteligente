@@ -1,0 +1,23 @@
+from fastapi import APIRouter
+from app.api.v1.endpoints import saude, escolas, alunos, turmas, responsaveis, facial, catraca, acessos, aulas, funcionarios, auth, configuracoes, relatorios, isup, usuarios, cameras, emergencia, boletim, professores
+
+router = APIRouter(prefix="/api/v1")
+router.include_router(auth.router)
+router.include_router(saude.router)
+router.include_router(escolas.router)
+router.include_router(alunos.router)
+router.include_router(turmas.router)
+router.include_router(responsaveis.router)
+router.include_router(facial.router)
+router.include_router(catraca.router)
+router.include_router(acessos.router)
+router.include_router(aulas.router)
+router.include_router(funcionarios.router)
+router.include_router(configuracoes.router)
+router.include_router(relatorios.router)
+router.include_router(isup.router)
+router.include_router(usuarios.router)
+router.include_router(cameras.router)
+router.include_router(emergencia.router)
+router.include_router(boletim.router)
+router.include_router(professores.router)

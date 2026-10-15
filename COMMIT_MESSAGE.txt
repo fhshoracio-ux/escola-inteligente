@@ -1,0 +1,10 @@
+Replace prints with centralized logging; replace bare excepts
+
+- Add `app/core/logging_config.py` with a shared logger
+- Replace all `print()` calls with `logger` (info/warning/error/debug) across the codebase
+- Replace bare `except:` with `except Exception as e:` in detected locations
+- Minor logging-level adjustments in network/IO modules
+
+Notes:
+- No runtime tests or git commit were executed in this environment because `python` and `git` are not available in the integrated terminal.
+- Run the provided PowerShell script `commit_changes.ps1` to stage and commit these changes locally.
