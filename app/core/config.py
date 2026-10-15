@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     FACE_MODEL_NAME: str = "buffalo_l"
     CATRACA_PORTA: str = "COM3"
     CATRACA_BAUD: int = 9600
+    UPLOADS_DIR: str = "uploads"
+    HLS_DIR: str = "hls"
+    PAINEL_DIST_PATH: str = ""
 
     @property
     def DATABASE_URL(self) -> str:

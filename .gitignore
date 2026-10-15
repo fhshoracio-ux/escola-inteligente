@@ -1,10 +1,33 @@
+# Python
 venv/
+env/
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Ambiente / segredos
 .env
-models/
+.env.*
+!.env.example
+
+# Dados e modelos de ML (nao confundir com app/models/, que e codigo-fonte)
+/models/
 *.onnx
 uploads/
 capturas/
-*.log
 logs/
+*.log
+
+# Build / empacotamento
+dist/
+build/
+*.spec.bak
+
+# Frontend
+node_modules/
+
+# SO
+.DS_Store
+Thumbs.db

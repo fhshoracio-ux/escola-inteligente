@@ -5,11 +5,12 @@ import os
 import sqlalchemy as sa
 from app.db.database import SessionLocal
 from app.core.logging_config import logger
+from app.core.config import settings
 
 router = APIRouter(prefix="/cameras", tags=["Cameras"])
 
-FFMPEG = r"C:\projetos\ffmpeg\ffmpeg-8.1.1-essentials_build\bin\ffmpeg.exe"
-HLS_DIR = r"C:\projetos\hls"
+FFMPEG = os.environ.get("FFMPEG_PATH", "ffmpeg")
+HLS_DIR = settings.HLS_DIR
 os.makedirs(HLS_DIR, exist_ok=True)
 
 processos_ativos = {}

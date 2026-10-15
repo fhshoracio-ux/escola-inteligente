@@ -4,10 +4,11 @@ from typing import Optional
 import uuid
 import os
 import shutil
+from app.core.config import settings
 
 router = APIRouter(prefix="/escolas", tags=["Escolas"])
 
-UPLOAD_DIR = r"C:\projetos\escola_facial\uploads\logos"
+UPLOAD_DIR = os.path.join(settings.UPLOADS_DIR, "logos")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 class EscolaCreate(BaseModel):

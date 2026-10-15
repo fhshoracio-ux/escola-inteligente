@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from app.api.v1.router import router
 from app.core.logging_config import logger
+from app.core.config import settings
 import os
 
 app = FastAPI(title="Sistema Escolar Facial")
@@ -37,18 +38,18 @@ async def startup():
         logger.error(f"[Qdrant] Erro no startup: {e}")
 
 # Servir uploads
-uploads_path = r"C:\projetos\escola_facial\uploads"
+uploads_path = settings.UPLOADS_DIR
 os.makedirs(uploads_path, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
 # Servir HLS streams
-hls_path = r"C:\projetos\hls"
+hls_path = settings.HLS_DIR
 os.makedirs(hls_path, exist_ok=True)
 app.mount("/hls", StaticFiles(directory=hls_path), name="hls")
 
-# Servir painel React
-painel_path = r"C:\projetos\painel-escolar\dist"
-if os.path.exists(painel_path):
+# Servir painel React (opcional, so monta se o caminho existir)
+painel_path = settings.PAINEL_DIST_PATH
+if painel_path and os.path.exists(painel_path):
     app.mount("/painel", StaticFiles(directory=painel_path, html=True), name="painel")
 
 @app.get("/")

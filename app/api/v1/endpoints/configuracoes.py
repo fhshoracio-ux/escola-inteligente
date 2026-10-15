@@ -3,10 +3,11 @@ from pydantic import BaseModel
 from typing import Optional
 import os
 import shutil
+from app.core.config import settings
 
 router = APIRouter(prefix="/configuracoes", tags=["Configuracoes"])
 
-UPLOAD_DIR = r"C:\projetos\escola_facial\uploads\config"
+UPLOAD_DIR = os.path.join(settings.UPLOADS_DIR, "config")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 PUSH_TOKENS = []
