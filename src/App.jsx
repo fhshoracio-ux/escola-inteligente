@@ -27,6 +27,7 @@ export default function App() {
   const [pagina, setPagina] = useState('dashboard')
   const [logoUrl, setLogoUrl] = useState(null)
   const [marcaDagua, setMarcaDagua] = useState(null)
+  const [menuAberto, setMenuAberto] = useState(false)
 
   useEffect(() => {
     if (usuario) {
@@ -83,8 +84,19 @@ export default function App() {
 
   const Pagina = paginas[pagina] || Dashboard
 
+  function irPara(id) {
+    setPagina(id)
+    setMenuAberto(false)
+  }
+
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'system-ui, sans-serif', position: 'relative' }}>
+    <div className="app-layout">
+      {/* Barra do topo: só aparece em telas pequenas */}
+      <header className="app-topbar">
+        <button onClick={() => setMenuAberto(true)} aria-label="Abrir menu">☰</button>
+        <span>Escola Inteligente</span>
+      </header>
+      <div className={`app-backdrop${menuAberto ? ' aberto' : ''}`} onClick={() => setMenuAberto(false)} />
       {marcaDagua && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
@@ -93,10 +105,7 @@ export default function App() {
           backgroundSize: '40%', opacity: 0.06,
         }} />
       )}
-      <aside style={{
-        width: 220, background: '#1e1b4b', padding: '1.5rem 0',
-        display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1, overflowY: 'auto',
-      }}>
+      <aside className={`app-sidebar${menuAberto ? ' aberto' : ''}`}>
         <div style={{ padding: '0 1.5rem', marginBottom: '2rem', textAlign: 'center' }}>
           {logoUrl
             ? <img src={logoUrl} style={{ height: 50, objectFit: 'contain', marginBottom: '0.5rem', borderRadius: '8px' }} />
@@ -106,7 +115,7 @@ export default function App() {
           <div style={{ color: '#a5b4fc', fontSize: '0.75rem' }}>Olá, {usuario.nome}</div>
         </div>
         {menu.map(item => (
-          <button key={item.id} onClick={() => setPagina(item.id)}
+          <button key={item.id} onClick={() => irPara(item.id)}
             style={{
               display: 'flex', alignItems: 'center', gap: '0.75rem',
               padding: '0.75rem 1.5rem', border: 'none', cursor: 'pointer',
@@ -127,7 +136,7 @@ export default function App() {
           🚪 Sair
         </button>
       </aside>
-      <main style={{ flex: 1, background: '#f9fafb', overflowY: 'auto', position: 'relative', zIndex: 1 }}>
+      <main className="app-main">
         <Pagina />
       </main>
       <BotaoPanico escolaId={ESCOLA_ID} />
@@ -173,7 +182,7 @@ function BotaoPanico({ escolaId }) {
 
   return (
     <>
-      <button onClick={() => setAberto(true)}
+      <button onClick={() => setAberto(true)} className="botao-panico"
         style={{
           position: 'fixed', bottom: '2rem', right: '2rem',
           width: 64, height: 64, borderRadius: '50%',
@@ -187,10 +196,12 @@ function BotaoPanico({ escolaId }) {
         <div style={{
           position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)',
           zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: '1rem',
         }}>
           <div style={{
             background: 'white', borderRadius: '16px', padding: '2rem',
-            width: 400, boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+            width: '100%', maxWidth: 400, boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+            maxHeight: '90vh', overflowY: 'auto',
           }}>
             <h2 style={{ color: '#ef4444', fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem' }}>
               🚨 Acionar Emergência

@@ -48,14 +48,14 @@ export default function Funcionarios() {
     <div style={{ padding: '2rem' }}>
       <h1 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem' }}>Funcionarios</h1>
 
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         <select value={escolaId} onChange={e => setEscolaId(e.target.value)}
           style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '0.9rem' }}>
           {escolas.map(e => <option key={e.id} value={e.id}>{e.nome}</option>)}
         </select>
       </div>
 
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         {['lista', 'ponto', 'cadastro'].map(a => (
           <button key={a} onClick={() => { setAba(a); setMensagem(''); setErro('') }}
             style={{
@@ -74,7 +74,7 @@ export default function Funcionarios() {
           {funcionarios.length === 0 ? (
             <p style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>Nenhum funcionario cadastrado.</p>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+            <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
               <thead>
                 <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
                   <th style={th}>Nome</th>
@@ -104,7 +104,7 @@ export default function Funcionarios() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           )}
         </div>
       )}
@@ -114,7 +114,7 @@ export default function Funcionarios() {
           {pontos.length === 0 ? (
             <p style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>Nenhum ponto registrado hoje.</p>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+            <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
               <thead>
                 <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
                   <th style={th}>Funcionario</th>
@@ -141,7 +141,7 @@ export default function Funcionarios() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           )}
         </div>
       )}

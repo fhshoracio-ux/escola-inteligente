@@ -123,7 +123,7 @@ export default function Presenca() {
       </div>
 
       {/* Abas */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
         {['chamada', 'historico'].map(a => (
           <button key={a} onClick={() => setAba(a)}
             style={{
@@ -146,7 +146,7 @@ export default function Presenca() {
             </p>
           ) : (
             <>
-              <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #f3f4f6', display: 'flex', gap: '1rem' }}>
+              <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #f3f4f6', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <span style={{ background: '#DCFCE7', color: '#166534', padding: '4px 12px', borderRadius: '999px', fontSize: '0.85rem' }}>
                   ✓ {presentes} presentes
                 </span>
@@ -154,7 +154,7 @@ export default function Presenca() {
                   ✗ {ausentes} ausentes
                 </span>
               </div>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+              <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                 <thead>
                   <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
                     <th style={th}>Aluno</th>
@@ -189,7 +189,7 @@ export default function Presenca() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             </>
           )}
         </div>
@@ -201,7 +201,7 @@ export default function Presenca() {
           {historico.length === 0 ? (
             <p style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>Nenhuma aula registrada.</p>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+            <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
               <thead>
                 <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
                   <th style={th}>Disciplina</th>
@@ -229,7 +229,7 @@ export default function Presenca() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           )}
         </div>
       )}

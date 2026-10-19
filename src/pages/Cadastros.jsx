@@ -408,7 +408,7 @@ export default function Cadastros() {
 
       {/* Modal Cadastro de Rosto + Responsavel */}
       {modalRosto && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 2000 }}>
           <div style={{ background: 'white', borderRadius: '16px', padding: '2rem', width: '100%', maxWidth: 520, boxShadow: '0 20px 60px rgba(0,0,0,0.3)', maxHeight: '90vh', overflowY: 'auto' }}>
 
             {/* Header */}
@@ -426,7 +426,7 @@ export default function Cadastros() {
             </div>
 
             {/* Etapas */}
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
               <div style={{ flex: 1, padding: '0.5rem', borderRadius: '8px', textAlign: 'center', fontSize: '0.85rem', fontWeight: 600, background: etapaModal === 'rosto' ? '#6366f1' : '#DCFCE7', color: etapaModal === 'rosto' ? 'white' : '#166534' }}>
                 1. Rosto Facial
               </div>
@@ -444,7 +444,7 @@ export default function Cadastros() {
                   </div>
                 )}
 
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
                   <button onClick={() => { setModoRosto('webcam'); pararWebcam(); setFotoCapturada(null) }}
                     style={{ flex: 1, padding: '0.5rem', borderRadius: '8px', border: 'none', cursor: 'pointer', background: modoRosto === 'webcam' ? '#6366f1' : '#f3f4f6', color: modoRosto === 'webcam' ? 'white' : '#374151', fontWeight: 500 }}>
                     📷 Webcam

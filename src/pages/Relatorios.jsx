@@ -146,7 +146,7 @@ export default function Relatorios() {
           {aulas.length === 0 ? (
             <p style={{ color: '#9ca3af' }}>Nenhuma aula registrada para esta turma.</p>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+            <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
               <thead>
                 <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
                   {['Disciplina','Data','Presentes','Ausentes','Total','PDF'].map(h => (
@@ -168,7 +168,7 @@ export default function Relatorios() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           )}
         </div>
       )}

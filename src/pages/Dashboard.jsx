@@ -48,7 +48,7 @@ export default function Dashboard() {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
         <h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Dashboard</h1>
         <span style={{ fontSize: '0.85rem', color: '#6b7280' }}>
           Atualiza automaticamente a cada 30 segundos
@@ -64,7 +64,7 @@ export default function Dashboard() {
       </div>
 
       {/* Graficos */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
+      <div className="grade-graficos" style={{ display: 'grid', gap: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', border: '1px solid #e5e7eb' }}>
           <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem', color: '#374151' }}>Entradas por Hora</h2>
           {porHora.length > 0 ? (
@@ -102,7 +102,7 @@ export default function Dashboard() {
 
       {/* Ultimas entradas */}
       <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-        <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#374151' }}>Ultimas Entradas</h2>
           <span style={{ fontSize: '0.8rem', color: '#6b7280' }}>{acessos.length} entradas hoje</span>
         </div>
@@ -111,7 +111,7 @@ export default function Dashboard() {
         ) : acessos.length === 0 ? (
           <p style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>Nenhuma entrada registrada hoje.</p>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+          <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
             <thead>
               <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
                 <th style={th}>Aluno</th>
@@ -147,7 +147,7 @@ export default function Dashboard() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         )}
       </div>
     </div>

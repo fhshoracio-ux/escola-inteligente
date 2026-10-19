@@ -89,7 +89,7 @@ export default function PlanoAula() {
     <div style={{ padding: '2rem' }}>
       <h1 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem' }}>Plano de Aula</h1>
 
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         {[
           { id: 'plano', label: 'Plano de Aula' },
           { id: 'vincular', label: 'Vincular Professor' },
@@ -119,14 +119,14 @@ export default function PlanoAula() {
 
       {aba === 'plano' && (
         <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-          <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
             <span style={{ fontWeight: 600, color: '#374151' }}>Plano de Aula Completo</span>
             <span style={{ color: '#6b7280', fontSize: '0.85rem' }}>{plano.length} vinculos</span>
           </div>
           {plano.length === 0 ? (
             <p style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>Nenhum vinculo cadastrado. Vá em Vincular Professor.</p>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+            <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
               <thead>
                 <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
                   <th style={th}>Turma</th>
@@ -165,7 +165,7 @@ export default function PlanoAula() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           )}
         </div>
       )}

@@ -46,7 +46,7 @@ export default function Historico() {
       ) : acessos.length === 0 ? (
         <p style={{ color: '#6b7280' }}>Nenhum acesso registrado nesta data.</p>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+        <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
           <thead>
             <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
               <th style={th}>Aluno</th>
@@ -85,7 +85,7 @@ export default function Historico() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       )}
     </div>
   )

@@ -73,7 +73,7 @@ export default function Usuarios() {
     <div style={{ padding: '2rem' }}>
       <h1 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem' }}>Usuarios</h1>
 
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         {['lista', 'novo'].map(a => (
           <button key={a} onClick={() => { setAba(a); setMensagem(''); setErro('') }}
             style={{
@@ -95,7 +95,7 @@ export default function Usuarios() {
           {usuarios.length === 0 ? (
             <p style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>Nenhum usuario cadastrado.</p>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+            <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
               <thead>
                 <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
                   <th style={th}>Nome</th>
@@ -141,7 +141,7 @@ export default function Usuarios() {
                   )
                 })}
               </tbody>
-            </table>
+            </table></div>
           )}
         </div>
       )}

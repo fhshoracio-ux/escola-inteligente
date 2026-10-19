@@ -3,13 +3,6 @@
   --text-h: #08060d;
   --bg: #fff;
   --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -36,18 +29,13 @@
     --text-h: #f3f4f6;
     --bg: #16171d;
     --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
@@ -55,15 +43,11 @@ body {
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
+  width: 100%;
   text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
 h1,
@@ -95,17 +79,142 @@ p {
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+img,
+video {
+  max-width: 100%;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* ===== Layout do painel (menu lateral + conteúdo) ===== */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  font-family: system-ui, sans-serif;
+  position: relative;
+}
+
+.app-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: #1e1b4b;
+  padding: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 1;
+  overflow-y: auto;
+}
+
+.app-main {
+  flex: 1;
+  min-width: 0; /* deixa o conteúdo encolher em vez de estourar a tela */
+  background: #f9fafb;
+  position: relative;
+  z-index: 1;
+}
+
+/* barra do topo e fundo escuro só aparecem no celular/tablet */
+.app-topbar,
+.app-backdrop {
+  display: none;
+}
+
+/* tabelas largas ganham rolagem lateral em telas pequenas */
+.tabela-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* dois gráficos lado a lado no Dashboard */
+.grade-graficos {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* ===== Tablet e celular (até 900px) ===== */
+@media (max-width: 900px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .app-topbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #1e1b4b;
+    color: white;
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+  }
+
+  .app-topbar button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* menu lateral vira uma gaveta que desliza da esquerda */
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    max-width: 85vw;
+    height: 100%;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .app-sidebar.aberto {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .app-backdrop.aberto {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 90;
+  }
+
+  .grade-graficos {
+    grid-template-columns: 1fr;
+  }
+
+  /* no celular as células da tabela não quebram linha; a tabela rola para o lado */
+  .tabela-scroll th,
+  .tabela-scroll td {
+    white-space: nowrap;
+  }
+}
+
+/* ===== Celular (até 600px) ===== */
+@media (max-width: 600px) {
+  /* menos espaço nas bordas de cada página */
+  .app-main > div {
+    padding: 1rem !important;
+  }
+
+  .app-main select,
+  .app-main input {
+    max-width: 100%;
+  }
+
+  .botao-panico {
+    width: 52px !important;
+    height: 52px !important;
+    bottom: 1rem !important;
+    right: 1rem !important;
+    font-size: 1.4rem !important;
+  }
 }

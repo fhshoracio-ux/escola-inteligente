@@ -174,7 +174,7 @@ export default function Notas() {
         </div>
       ) : (
         <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-          <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
             <div>
               <span style={{ fontWeight: 600, color: '#374151' }}>{alunos.length} alunos</span>
               <span style={{ color: '#6b7280', fontSize: '0.85rem', marginLeft: '0.5rem' }}>
@@ -187,7 +187,7 @@ export default function Notas() {
             </button>
           </div>
 
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+          <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
             <thead>
               <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
                 <th style={th}>Aluno</th>
@@ -254,7 +254,7 @@ export default function Notas() {
                 )
               })}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
     </div>

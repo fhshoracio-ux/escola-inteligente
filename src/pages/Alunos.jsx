@@ -102,7 +102,7 @@ export default function Alunos() {
       {mensagem && <div style={{ background: '#DCFCE7', color: '#166534', padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1rem' }}>✓ {mensagem}</div>}
       {erro && <div style={{ background: '#FEE2E2', color: '#991b1b', padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1rem' }}>{erro}</div>}
 
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         <select value={escolaId} onChange={e => setEscolaId(e.target.value)}
           style={{ padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '0.9rem' }}>
           {escolas.map(e => <option key={e.id} value={e.id}>{e.nome}</option>)}
@@ -119,7 +119,7 @@ export default function Alunos() {
       </div>
 
       <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+        <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
           <thead>
             <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
               <th style={th}>Nome</th>
@@ -166,15 +166,15 @@ export default function Alunos() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
         {filtrados.length === 0 && (
           <p style={{ textAlign: 'center', color: '#9ca3af', padding: '2rem' }}>Nenhum aluno encontrado.</p>
         )}
       </div>
 
       {modalEditar && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div style={{ background: 'white', borderRadius: '16px', padding: '2rem', width: '100%', maxWidth: 440, boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 1000 }}>
+          <div style={{ background: 'white', borderRadius: '16px', padding: '2rem', width: '100%', maxWidth: 440, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', maxHeight: '90vh', overflowY: 'auto' }}>
             <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1.5rem', color: '#1e1b4b' }}>Editar Aluno</h2>
             <label style={{ fontSize: '0.85rem', color: '#6b7280', display: 'block', marginBottom: '4px' }}>Nome</label>
             <input style={input} value={editForm.nome} onChange={e => setEditForm({ ...editForm, nome: e.target.value })} />
@@ -202,7 +202,7 @@ export default function Alunos() {
       )}
 
       {modalExcluir && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 1000 }}>
           <div style={{ background: 'white', borderRadius: '16px', padding: '2rem', width: '100%', maxWidth: 400, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', textAlign: 'center' }}>
             <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚠️</div>
             <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1e1b4b' }}>Excluir Aluno</h2>
