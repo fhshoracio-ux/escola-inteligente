@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Users, DoorOpen, Camera, School } from 'lucide-react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from 'recharts'
+import { Users, DoorOpen, Camera, School, ShieldCheck } from 'lucide-react'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts'
 import api from '../api'
+import { Card, StatCard, HeroBanner, ProgressBar, StatusDot } from '../components/ui'
+import { colors, tones, radius } from '../theme'
 
 export default function Dashboard() {
   const [acessos, setAcessos] = useState([])
@@ -29,7 +31,13 @@ export default function Dashboard() {
     }
   }
 
+  const nome = localStorage.getItem('nome') || ''
   const presentes = new Set(acessos.map(a => a.aluno_id)).size
+
+  // Confiança média do reconhecimento facial (em %)
+  const confiancaMedia = acessos.length > 0
+    ? (acessos.reduce((soma, a) => soma + (a.confianca || 0), 0) / acessos.length) * 100
+    : 0
 
   // Grafico entradas por hora
   const porHora = Array.from({ length: 24 }, (_, h) => ({
@@ -37,7 +45,7 @@ export default function Dashboard() {
     entradas: acessos.filter(a => new Date(a.ocorrido_em).getHours() === h).length
   })).filter(h => h.entradas > 0 || (parseInt(h.hora) >= 6 && parseInt(h.hora) <= 18))
 
-  // Grafico entradas por turma
+  // Ranking de entradas por turma (maior primeiro)
   const porTurma = Object.entries(
     acessos.reduce((acc, a) => {
       const turma = a.turma || 'Sem turma'
@@ -45,126 +53,146 @@ export default function Dashboard() {
       return acc
     }, {})
   ).map(([turma, entradas]) => ({ turma, entradas }))
+    .sort((a, b) => b.entradas - a.entradas)
+  const maiorTurma = porTurma[0]?.entradas || 0
+
+  // Rosca: entradas com confiança alta (>= 90%) x média (< 90%)
+  const altas = acessos.filter(a => a.confianca >= 0.9).length
+  const fatiasConfianca = [
+    { nome: 'Confiança alta (≥ 90%)', valor: altas, cor: tones.success.color },
+    { nome: 'Confiança média (< 90%)', valor: acessos.length - altas, cor: tones.warning.color },
+  ]
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Dashboard</h1>
-        <span style={{ fontSize: '0.85rem', color: '#6b7280' }}>
-          Atualiza automaticamente a cada 30 segundos
-        </span>
+    <div style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <HeroBanner eyebrow="Painel escolar" title={nome ? `Olá, ${nome}!` : 'Olá!'}>
+        Acompanhe presença, acessos e alunos em tempo real.
+      </HeroBanner>
+
+      {/* Cards de resumo */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(160px, 100%), 1fr))', gap: 16 }}>
+        <StatCard icon={School} tone="neutral" value={escolas.length} label="Escolas" />
+        <StatCard icon={Users} tone="success" value={presentes} label="Alunos presentes hoje" />
+        <StatCard icon={DoorOpen} tone="info" value={acessos.length} label="Entradas hoje" />
+        <StatCard icon={Camera} tone="orange" value={escolas.length} label="Câmeras ativas" />
+        <StatCard icon={ShieldCheck} tone="warning" value={`${confiancaMedia.toFixed(0)}%`} label="Confiança média" />
       </div>
 
-      {/* Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-        <Card icon={<School size={24} color="#6366f1" />} titulo="Escolas" valor={escolas.length} cor="#EEF2FF" />
-        <Card icon={<Users size={24} color="#10b981" />} titulo="Alunos presentes" valor={presentes} cor="#ECFDF5" />
-        <Card icon={<DoorOpen size={24} color="#f59e0b" />} titulo="Total de entradas" valor={acessos.length} cor="#FFFBEB" />
-        <Card icon={<Camera size={24} color="#3b82f6" />} titulo="Cameras ativas" valor={escolas.length} cor="#EFF6FF" />
-      </div>
+      {/* Cards de análise */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: 16 }}>
+        <Card title="Reconhecimento facial" subtitle="Confiança das entradas de hoje">
+          {acessos.length === 0 ? <Vazio /> : (
+            <>
+              <div style={{ position: 'relative', height: 180 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={fatiasConfianca} dataKey="valor" nameKey="nome"
+                      innerRadius={58} outerRadius={80} startAngle={90} endAngle={-270}
+                      stroke="none">
+                      {fatiasConfianca.map(f => <Cell key={f.nome} fill={f.cor} />)}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+                {/* Total no centro da rosca */}
+                <div style={{
+                  position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', justifyContent: 'center', pointerEvents: 'none',
+                }}>
+                  <div style={{ fontSize: 22, fontWeight: 700, color: colors.textStrong }}>{acessos.length}</div>
+                  <div style={{ fontSize: 10, color: colors.textMuted, textTransform: 'uppercase' }}>Total</div>
+                </div>
+              </div>
+              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {fatiasConfianca.map(f => (
+                  <div key={f.nome} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: colors.textMuted }}>
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: f.cor, flexShrink: 0 }} />
+                    <span style={{ flex: 1 }}>{f.nome}</span>
+                    <span style={{ color: colors.textStrong, fontWeight: 600 }}>{f.valor}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </Card>
 
-      {/* Graficos */}
-      <div className="grade-graficos" style={{ display: 'grid', gap: '1.5rem', marginBottom: '2rem' }}>
-        <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', border: '1px solid #e5e7eb' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem', color: '#374151' }}>Entradas por Hora</h2>
-          {porHora.length > 0 ? (
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={porHora}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                <XAxis dataKey="hora" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Bar dataKey="entradas" fill="#6366f1" radius={[4, 4, 0, 0]} />
+        <Card title="Entradas por hora" subtitle="Quantidade de entradas ao longo do dia">
+          {acessos.length === 0 ? <Vazio /> : (
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={porHora} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
+                <CartesianGrid vertical={false} stroke={colors.borderSoft} />
+                <XAxis dataKey="hora" tick={{ fontSize: 11, fill: colors.textMuted }} axisLine={false} tickLine={false} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: colors.textMuted }} axisLine={false} tickLine={false} />
+                <Tooltip cursor={{ fill: colors.borderSoft }}
+                  contentStyle={{ borderRadius: radius.control, border: `1px solid ${colors.border}`, fontSize: 12 }} />
+                <Bar dataKey="entradas" fill={colors.primary} radius={[4, 4, 0, 0]} maxBarSize={16} />
               </BarChart>
             </ResponsiveContainer>
-          ) : (
-            <p style={{ color: '#9ca3af', textAlign: 'center', paddingTop: '3rem' }}>Nenhuma entrada hoje.</p>
           )}
-        </div>
+        </Card>
 
-        <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', border: '1px solid #e5e7eb' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem', color: '#374151' }}>Entradas por Turma</h2>
-          {porTurma.length > 0 ? (
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={porTurma} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                <XAxis type="number" tick={{ fontSize: 11 }} />
-                <YAxis dataKey="turma" type="category" tick={{ fontSize: 11 }} width={80} />
-                <Tooltip />
-                <Bar dataKey="entradas" fill="#10b981" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <p style={{ color: '#9ca3af', textAlign: 'center', paddingTop: '3rem' }}>Nenhuma entrada hoje.</p>
+        <Card title="Entradas por turma" subtitle="Turmas com mais entradas hoje">
+          {porTurma.length === 0 ? <Vazio /> : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {porTurma.slice(0, 8).map((t, i) => (
+                <div key={t.turma}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, marginBottom: 6 }}>
+                    <span style={{ color: colors.textMuted, width: 22 }}>{i + 1}º</span>
+                    <span style={{ flex: 1, color: colors.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.turma}</span>
+                    <span style={{ color: colors.textStrong, fontWeight: 600 }}>{t.entradas}</span>
+                  </div>
+                  <ProgressBar value={t.entradas} max={maiorTurma} />
+                </div>
+              ))}
+            </div>
           )}
-        </div>
+        </Card>
       </div>
 
-      {/* Ultimas entradas */}
-      <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-        <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#374151' }}>Ultimas Entradas</h2>
-          <span style={{ fontSize: '0.8rem', color: '#6b7280' }}>{acessos.length} entradas hoje</span>
-        </div>
+      {/* Últimas entradas */}
+      <Card title="Últimas entradas" subtitle={`${acessos.length} entradas hoje · atualiza a cada 30 segundos`}>
         {loading ? (
-          <p style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>Carregando...</p>
+          <p style={{ textAlign: 'center', color: colors.textMuted, padding: '24px 0', margin: 0 }}>Carregando...</p>
         ) : acessos.length === 0 ? (
-          <p style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>Nenhuma entrada registrada hoje.</p>
+          <p style={{ textAlign: 'center', color: colors.textMuted, padding: '24px 0', margin: 0 }}>Nenhuma entrada registrada hoje.</p>
         ) : (
-          <div className="tabela-scroll"><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
-            <thead>
-              <tr style={{ background: '#f9fafb', textAlign: 'left' }}>
-                <th style={th}>Aluno</th>
-                <th style={th}>Turma</th>
-                <th style={th}>Escola</th>
-                <th style={th}>Horario</th>
-                <th style={th}>Confianca</th>
-              </tr>
-            </thead>
-            <tbody>
-              {acessos.slice(0, 20).map((a, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                  <td style={td}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 600, fontSize: '0.8rem' }}>
-                        {a.aluno_nome?.charAt(0)}
-                      </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))', gap: 12 }}>
+            {acessos.slice(0, 20).map((a, i) => {
+              const alta = a.confianca >= 0.9
+              return (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  border: `1px solid ${colors.border}`, borderRadius: 12, padding: '12px 14px',
+                }}>
+                  <StatusDot tone={alta ? 'success' : 'warning'} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 600, color: colors.textStrong, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {a.aluno_nome}
                     </div>
-                  </td>
-                  <td style={td}>{a.turma || '—'}</td>
-                  <td style={td}>{a.escola}</td>
-                  <td style={td}>{new Date(a.ocorrido_em).toLocaleTimeString('pt-BR')}</td>
-                  <td style={td}>
-                    <span style={{
-                      background: a.confianca >= 0.9 ? '#DCFCE7' : '#FEF9C3',
-                      color: a.confianca >= 0.9 ? '#166534' : '#854d0e',
-                      padding: '2px 8px', borderRadius: '999px', fontSize: '0.8rem'
-                    }}>
-                      {(a.confianca * 100).toFixed(1)}%
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table></div>
+                    <div style={{ fontSize: 12, color: colors.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {a.turma || 'Sem turma'} · {a.escola} · {new Date(a.ocorrido_em).toLocaleTimeString('pt-BR')}
+                    </div>
+                  </div>
+                  <span style={{
+                    background: alta ? tones.success.bg : tones.warning.bg,
+                    color: alta ? '#166534' : '#92400E',
+                    padding: '2px 8px', borderRadius: 999, fontSize: 12, fontWeight: 500, flexShrink: 0,
+                  }}>
+                    {(a.confianca * 100).toFixed(1)}%
+                  </span>
+                </div>
+              )
+            })}
+          </div>
         )}
-      </div>
+      </Card>
     </div>
   )
 }
 
-function Card({ icon, titulo, valor, cor }) {
+function Vazio() {
   return (
-    <div style={{ background: cor, borderRadius: '12px', padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-      <div style={{ background: 'white', borderRadius: '8px', padding: '0.5rem', display: 'flex' }}>{icon}</div>
-      <div>
-        <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>{titulo}</div>
-        <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{valor}</div>
-      </div>
-    </div>
+    <p style={{ color: colors.textMuted, textAlign: 'center', padding: '48px 0', margin: 0, fontSize: 13 }}>
+      Nenhuma entrada hoje.
+    </p>
   )
 }
-
-const th = { padding: '0.75rem 1rem', fontWeight: 600, color: '#374151', borderBottom: '2px solid #e5e7eb' }
-const td = { padding: '0.75rem 1rem', color: '#374151' }
