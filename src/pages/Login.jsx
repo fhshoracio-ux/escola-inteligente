@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import api from '../api'
+import logoTraipu from '../assets/logo-traipu.webp'
+import { Card, Button } from '../components/ui'
+import { colors, tones, radius } from '../theme'
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState('')
@@ -27,46 +30,44 @@ export default function Login({ onLogin }) {
 
   return (
     <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center',
-      justifyContent: 'center', background: '#1e1b4b', fontFamily: 'system-ui, sans-serif'
+      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: colors.pageBg, padding: 16,
     }}>
-      <div style={{
-        background: 'white', borderRadius: '16px', padding: '2.5rem',
-        width: '100%', maxWidth: '380px', boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
-      }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🏫</div>
-          <h1 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#1e1b4b', margin: 0 }}>Escola Inteligente</h1>
-          <p style={{ color: '#6b7280', fontSize: '0.85rem', marginTop: '0.25rem' }}>Sistema de Gestao Escolar</p>
+      <Card padding={32} style={{ width: '100%', maxWidth: 400 }}>
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <img src={logoTraipu} alt="Prefeitura de Traipu"
+            style={{ width: 200, maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto 16px' }} />
+          <h1 style={{ fontSize: 20, fontWeight: 700, color: colors.textStrong, margin: 0 }}>Escola Inteligente</h1>
+          <p style={{ color: colors.textMuted, fontSize: 13, margin: '4px 0 0' }}>Entre com seu email e senha para acessar o painel</p>
         </div>
 
         {erro && (
-          <div style={{ background: '#FEE2E2', color: '#991b1b', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.85rem' }}>
+          <div style={{
+            background: tones.error.bg, color: '#991B1B', padding: '10px 12px',
+            borderRadius: radius.control, marginBottom: 16, fontSize: 13,
+          }}>
             {erro}
           </div>
         )}
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ fontSize: '0.85rem', fontWeight: 500, color: '#374151', display: 'block', marginBottom: '4px' }}>Email</label>
-          <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+        <div style={{ marginBottom: 16 }}>
+          <label htmlFor="login-email" className="ui-label">Email</label>
+          <input id="login-email" className="ui-input" type="email" value={email} onChange={e => setEmail(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && entrar()}
-            placeholder="seu@email.com"
-            style={{ width: '100%', padding: '0.65rem 0.8rem', borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '0.9rem', boxSizing: 'border-box' }} />
+            placeholder="seu@email.com" autoComplete="username" />
         </div>
 
-        <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ fontSize: '0.85rem', fontWeight: 500, color: '#374151', display: 'block', marginBottom: '4px' }}>Senha</label>
-          <input type="password" value={senha} onChange={e => setSenha(e.target.value)}
+        <div style={{ marginBottom: 24 }}>
+          <label htmlFor="login-senha" className="ui-label">Senha</label>
+          <input id="login-senha" className="ui-input" type="password" value={senha} onChange={e => setSenha(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && entrar()}
-            placeholder="••••••••"
-            style={{ width: '100%', padding: '0.65rem 0.8rem', borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '0.9rem', boxSizing: 'border-box' }} />
+            placeholder="••••••••" autoComplete="current-password" />
         </div>
 
-        <button onClick={entrar} disabled={loading}
-          style={{ width: '100%', padding: '0.75rem', background: '#6366f1', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '0.95rem' }}>
+        <Button fullWidth onClick={entrar} disabled={loading}>
           {loading ? 'Entrando...' : 'Entrar'}
-        </button>
-      </div>
+        </Button>
+      </Card>
     </div>
   )
 }
