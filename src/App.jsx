@@ -1,4 +1,10 @@
 ﻿import { useState, useEffect } from 'react'
+import {
+  LayoutDashboard, CheckCircle, Briefcase, History, BarChart3, GraduationCap,
+  ClipboardList, ScanFace, Camera, NotebookPen, BookOpen, FileText, Users,
+  Settings, LogOut, Menu,
+} from 'lucide-react'
+import logoTraipu from './assets/logo-traipu.webp'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Alunos from './pages/Alunos'
@@ -25,7 +31,8 @@ export default function App() {
     return token ? { token, nome } : null
   })
   const [pagina, setPagina] = useState('dashboard')
-  const [logoUrl, setLogoUrl] = useState(null)
+  // O menu usa sempre o logo da Traipu; o logo_url da escola continua sendo lido, mas não é exibido.
+  const [, setLogoUrl] = useState(null)
   const [marcaDagua, setMarcaDagua] = useState(null)
   const [menuAberto, setMenuAberto] = useState(false)
 
@@ -49,20 +56,20 @@ export default function App() {
   if (!usuario) return <Login onLogin={setUsuario} />
 
   const menu = [
-    { id: 'dashboard',      label: '📊 Painel' },
-    { id: 'presenca',       label: '✅ Presença' },
-    { id: 'funcionarios',   label: '👷 Funcionarios' },
-    { id: 'historico',      label: '📋 Histórico' },
-    { id: 'grafico',        label: '📈 Gráfico' },
-    { id: 'alunos',         label: '🎒 Alunos' },
-    { id: 'cadastros',      label: '📝 Cadastros' },
-    { id: 'cadastro-rosto', label: '😊 Cadastro de Rosto' },
-    { id: 'cameras',        label: '📷 Câmeras' },
-    { id: 'notas',          label: '📓 Notas' },
-    { id: 'plano-aula',     label: '📚 Plano de Aula' },
-    { id: 'relatorios',     label: '📄 Relatórios' },
-    { id: 'usuarios',       label: '👤 Usuários' },
-    { id: 'configuracoes',  label: '⚙️ Configurações' },
+    { id: 'dashboard',      label: 'Painel',             icon: LayoutDashboard },
+    { id: 'presenca',       label: 'Presença',           icon: CheckCircle },
+    { id: 'funcionarios',   label: 'Funcionários',       icon: Briefcase },
+    { id: 'historico',      label: 'Histórico',          icon: History },
+    { id: 'grafico',        label: 'Gráfico',            icon: BarChart3 },
+    { id: 'alunos',         label: 'Alunos',             icon: GraduationCap },
+    { id: 'cadastros',      label: 'Cadastros',          icon: ClipboardList },
+    { id: 'cadastro-rosto', label: 'Cadastro de Rosto',  icon: ScanFace },
+    { id: 'cameras',        label: 'Câmeras',            icon: Camera },
+    { id: 'notas',          label: 'Notas',              icon: NotebookPen },
+    { id: 'plano-aula',     label: 'Plano de Aula',      icon: BookOpen },
+    { id: 'relatorios',     label: 'Relatórios',         icon: FileText },
+    { id: 'usuarios',       label: 'Usuários',           icon: Users },
+    { id: 'configuracoes',  label: 'Configurações',      icon: Settings },
   ]
 
   const paginas = {
@@ -93,8 +100,8 @@ export default function App() {
     <div className="app-layout">
       {/* Barra do topo: só aparece em telas pequenas */}
       <header className="app-topbar">
-        <button onClick={() => setMenuAberto(true)} aria-label="Abrir menu">☰</button>
-        <span>Escola Inteligente</span>
+        <button onClick={() => setMenuAberto(true)} aria-label="Abrir menu"><Menu size={22} /></button>
+        <img src={logoTraipu} alt="Prefeitura de Traipu" />
       </header>
       <div className={`app-backdrop${menuAberto ? ' aberto' : ''}`} onClick={() => setMenuAberto(false)} />
       {marcaDagua && (
@@ -106,38 +113,34 @@ export default function App() {
         }} />
       )}
       <aside className={`app-sidebar${menuAberto ? ' aberto' : ''}`}>
-        <div style={{ padding: '0 1.5rem', marginBottom: '2rem', textAlign: 'center' }}>
-          {logoUrl
-            ? <img src={logoUrl} style={{ height: 50, objectFit: 'contain', marginBottom: '0.5rem', borderRadius: '8px' }} />
-            : <div style={{ fontSize: '2rem', marginBottom: '0.25rem' }}>🏫</div>
-          }
-          <div style={{ color: 'white', fontWeight: 700, fontSize: '1rem' }}>Escola Inteligente</div>
-          <div style={{ color: '#a5b4fc', fontSize: '0.75rem' }}>Olá, {usuario.nome}</div>
+        <div className="app-sidebar-topo">
+          <img src={logoTraipu} alt="Prefeitura de Traipu" />
+          <div className="app-sidebar-subtitulo">Painel escolar</div>
         </div>
-        {menu.map(item => (
-          <button key={item.id} onClick={() => irPara(item.id)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: '0.75rem',
-              padding: '0.75rem 1.5rem', border: 'none', cursor: 'pointer',
-              background: pagina === item.id ? '#312e81' : 'transparent',
-              color: pagina === item.id ? 'white' : '#a5b4fc',
-              fontSize: '0.9rem', textAlign: 'left', width: '100%',
-              borderLeft: pagina === item.id ? '3px solid #818cf8' : '3px solid transparent',
-            }}>
-            {item.label}
+        <nav className="app-sidebar-nav">
+          {menu.map(item => {
+            const Icone = item.icon
+            return (
+              <button key={item.id} onClick={() => irPara(item.id)}
+                className={`app-menu-item${pagina === item.id ? ' ativo' : ''}`}>
+                <Icone size={18} />
+                {item.label}
+              </button>
+            )
+          })}
+        </nav>
+        <div className="app-sidebar-rodape">
+          <div className="app-sidebar-ola">Olá, {usuario.nome}</div>
+          <button onClick={sair} className="app-menu-item sair">
+            <LogOut size={18} />
+            Sair
           </button>
-        ))}
-        <button onClick={sair}
-          style={{
-            marginTop: 'auto', padding: '0.75rem 1.5rem', border: 'none',
-            cursor: 'pointer', background: 'transparent', color: '#f87171',
-            fontSize: '0.9rem', textAlign: 'left', width: '100%',
-          }}>
-          🚪 Sair
-        </button>
+        </div>
       </aside>
       <main className="app-main">
-        <Pagina />
+        <div className="app-conteudo">
+          <Pagina />
+        </div>
       </main>
       <BotaoPanico escolaId={ESCOLA_ID} />
     </div>
