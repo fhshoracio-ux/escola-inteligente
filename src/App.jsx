@@ -13,6 +13,7 @@ import Funcionarios from './pages/Funcionarios'
 import Notas from './pages/Notas'
 import PlanoAula from './pages/PlanoAula'
 import Grafico from './pages/Grafico'
+import Matriculas from './pages/Matriculas'
 
 const NAV_ITEMS = [
   { id: 'dashboard',    label: 'Dashboard',          icon: '⊞' },
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
   { id: 'notas',        label: 'Notas',               icon: '📝' },
   { id: 'planoaula',    label: 'Plano de Aula',       icon: '📚' },
   { id: 'funcionarios', label: 'Funcionários',         icon: '👤' },
+  { id: 'matriculas',   label: 'Matrículas',           icon: '📥' },
   { id: 'cadastros',    label: 'Cadastros',            icon: '🏫' },
   { id: 'cadastrorosto',label: 'Reconhecimento Facial',icon: '🎭' },
   { id: 'grafico',      label: 'Gráficos',             icon: '📊' },
@@ -37,6 +39,7 @@ const PAGE_TITLES = {
   notas:         { title: 'Notas',                subtitle: 'Lançamento de notas' },
   planoaula:     { title: 'Plano de Aula',        subtitle: 'Gerenciamento de planos de aula' },
   funcionarios:  { title: 'Funcionários',          subtitle: 'Gestão de funcionários' },
+  matriculas:    { title: 'Matrículas Digitais',  subtitle: 'Solicitações enviadas pelo App de Matrícula' },
   cadastros:     { title: 'Cadastros',             subtitle: 'Gerenciamento de turmas e escolas' },
   cadastrorosto: { title: 'Reconhecimento Facial', subtitle: 'Cadastro e gestão de rostos' },
   grafico:       { title: 'Gráficos',              subtitle: 'Estatísticas e gráficos' },
@@ -53,6 +56,7 @@ function PageRenderer({ active }) {
     case 'notas':         return <Notas />
     case 'planoaula':     return <PlanoAula />
     case 'funcionarios':  return <Funcionarios />
+    case 'matriculas':    return <Matriculas />
     case 'cadastros':     return <Cadastros />
     case 'cadastrorosto': return <CadastroRosto />
     case 'grafico':       return <Grafico />
