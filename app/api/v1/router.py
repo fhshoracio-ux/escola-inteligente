@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import saude, escolas, alunos, turmas, responsaveis, facial, catraca, acessos, aulas, funcionarios, auth, configuracoes, relatorios, isup, usuarios, cameras, emergencia, boletim, professores
+from app.api.v1.endpoints import saude, escolas, alunos, turmas, responsaveis, facial, catraca, acessos, aulas, funcionarios, auth, configuracoes, relatorios, isup, usuarios, cameras, emergencia, boletim, professores, matriculas
 
 router = APIRouter(prefix="/api/v1")
 router.include_router(auth.router)
@@ -21,3 +21,4 @@ router.include_router(cameras.router)
 router.include_router(emergencia.router)
 router.include_router(boletim.router)
 router.include_router(professores.router)
+router.include_router(matriculas.router)
